@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR.js QR Code Reader</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR.js Display Iframe</title>
+  <script src="https://cdn.jsdelivr.net/npm/@argonjs/argon@3.0.0/dist/argon.min.js"></script>
 </head>
 <body>
-    <video id="qr-video" width="100%" height="100%" autoplay></video>
-    <canvas id="qr-canvas" style="display: none;"></canvas>
+  <a-scene embedded arjs>
+    <a-marker preset="hiro">
+      <!-- Define the iframe content -->
+      <a-entity position="0 0.5 0">
+        <a-entity
+          geometry="primitive: plane; width: 2; height: 1"
+          material="src: #iframeTexture"
+          scale="0.5 0.5 0.5"
+          rotation="-90 0 0">
+        </a-entity>
+      </a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+  <!-- Define the iframe source -->
+  <canvas id="iframeTexture"></canvas>
 
-    <script>
-        const video = document.getElementById('qr-video');
-        const canvasElement = document.getElementById('qr-canvas');
-        const canvas = canvasElement.getContext('2d');
+  <script>
+    var iframeTexture = document.getElementById('iframeTexture');
+    var ctx = iframeTexture.getContext('2d');
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-            .then((stream) => {
-                video.srcObject = stream;
-                video.setAttribute('playsinline', true);
-                video.play();
-                requestAnimationFrame(tick);
-            });
+    // Set the iframe source
+    var iframe = document.createElement('iframe');
+    iframe.src = 'https://example.com';
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    iframe.onload = function() {
+      // Draw iframe content to canvas
+      ctx.drawImage(iframe, 0, 0, iframeTexture.width, iframeTexture.height);
+    };
 
-        function tick() {
-            if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                canvasElement.height = video.videoHeight;
-                canvasElement.width = video.videoWidth;
-                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-                const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
-                if (code) {
-                    console.log('QR Code detected:', code.data);
-                    // Here you can perform any action with the detected QR code data
-                }
-            }
-            requestAnimationFrame(tick);
-        }
     </script>
 </body>
 </html>
