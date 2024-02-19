@@ -4,42 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AR.js Display Iframe</title>
-  <script src="https://cdn.jsdelivr.net/npm/@argonjs/argon@1.4.0/dist/argon.min.js"></script>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar-nft.js"></script>
 </head>
 <body>
   <a-scene embedded arjs>
-    <a-marker preset="hiro">
-      <!-- Define the iframe content -->
-      <a-entity position="0 0.5 0">
-        <a-entity
-          geometry="primitive: plane; width: 2; height: 1"
-          material="src: #iframeTexture"
-          scale="0.5 0.5 0.5"
-          rotation="-90 0 0">
-        </a-entity>
+    <!-- Add your iframe here -->
+    <a-entity position="0 0 -2">
+      <a-entity
+        geometry="primitive: plane; width: 2; height: 1.5"
+        material="src: #video"
+        scale="1 1 1"
+        rotation="-90 0 0">
       </a-entity>
-    </a-marker>
+      <a-video id="video" src="#your-iframe-src" width="16" height="9" autoplay="false" crossorigin="anonymous"></a-video>
+    </a-entity>
+    <!-- Camera -->
     <a-entity camera></a-entity>
   </a-scene>
-
-  <!-- Define the iframe source -->
-  <canvas id="iframeTexture"></canvas>
-
-  <script>
-    var iframeTexture = document.getElementById('iframeTexture');
-    var ctx = iframeTexture.getContext('2d');
-
-    // Set the iframe source
-    var iframe = document.createElement('iframe');
-    iframe.src = 'https://www.google.com';
-    iframe.style.width = '100%';
-    iframe.style.height = '100%';
-    iframe.style.border = 'none';
-    iframe.onload = function() {
-      // Draw iframe content to canvas
-      ctx.drawImage(iframe, 0, 0, iframeTexture.width, iframeTexture.height);
-    };
-
-    </script>
 </body>
 </html>
